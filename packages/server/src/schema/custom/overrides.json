@@ -1,0 +1,5 @@
+{
+  "_comment": "Field names listed here are EXCLUDED from auto-generated SDL because the custom layer declares them. Used to override default CRUD with auth-aware variants or different signatures.",
+  "queries": ["posts"],
+  "mutations": ["createPost", "deletePost"]
+}

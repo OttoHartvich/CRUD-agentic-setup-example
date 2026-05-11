@@ -1,0 +1,44 @@
+# Auto-generated — DO NOT EDIT
+# Default operations for Comment. Add custom ops in src/graphql/custom/.
+
+fragment CommentFields on Comment {
+  id
+  body
+  postId
+  authorId
+  createdAt
+}
+
+query GetComment($id: ID!) {
+  comment(id: $id) {
+    ...CommentFields
+  }
+}
+
+query ListComments {
+  comments {
+    ...CommentFields
+  }
+}
+
+query CountComments {
+  commentsCount
+}
+
+mutation CreateComment($input: CommentCreateInput!) {
+  createComment(input: $input) {
+    ...CommentFields
+  }
+}
+
+mutation UpdateComment($id: ID!, $input: CommentUpdateInput!) {
+  updateComment(id: $id, input: $input) {
+    ...CommentFields
+  }
+}
+
+mutation DeleteComment($id: ID!) {
+  deleteComment(id: $id) {
+    id
+  }
+}

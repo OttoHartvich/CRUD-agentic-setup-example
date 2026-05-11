@@ -1,0 +1,5 @@
+export { prisma } from './client.js'
+export * from './services/user.service.js'
+export * from './services/post.service.js'
+export * from './services/comment.service.js'
+export * from './services/tag.service.js'

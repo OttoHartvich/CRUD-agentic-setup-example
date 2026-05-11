@@ -1,0 +1,41 @@
+mutation CreatePost($title: String!, $content: String!) {
+  createPost(title: $title, content: $content) {
+    id
+    title
+    published
+  }
+}
+
+mutation PublishPost($id: ID!) {
+  publishPost(id: $id) {
+    id
+    published
+  }
+}
+
+mutation AddComment($postId: ID!, $body: String!) {
+  addComment(postId: $postId, body: $body) {
+    id
+    body
+    author {
+      id
+      name
+    }
+    createdAt
+  }
+}
+
+mutation Register($email: String!, $name: String!, $role: Role) {
+  register(email: $email, name: $name, role: $role) {
+    id
+    email
+    name
+    role
+  }
+}
+
+mutation DeletePost($id: ID!) {
+  deletePost(id: $id) {
+    id
+  }
+}

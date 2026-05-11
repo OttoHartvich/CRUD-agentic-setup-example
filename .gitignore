@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+*.log
+packages/db/src/generated/
+packages/web/src/gql/
+packages/server/schema.graphql
+.claude/settings.local.json

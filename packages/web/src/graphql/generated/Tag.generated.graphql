@@ -1,0 +1,42 @@
+# Auto-generated — DO NOT EDIT
+# Default operations for Tag. Add custom ops in src/graphql/custom/.
+
+fragment TagFields on Tag {
+  id
+  name
+  createdAt
+}
+
+query GetTag($id: ID!) {
+  tag(id: $id) {
+    ...TagFields
+  }
+}
+
+query ListTags {
+  tags {
+    ...TagFields
+  }
+}
+
+query CountTags {
+  tagsCount
+}
+
+mutation CreateTag($input: TagCreateInput!) {
+  createTag(input: $input) {
+    ...TagFields
+  }
+}
+
+mutation UpdateTag($id: ID!, $input: TagUpdateInput!) {
+  updateTag(id: $id, input: $input) {
+    ...TagFields
+  }
+}
+
+mutation DeleteTag($id: ID!) {
+  deleteTag(id: $id) {
+    id
+  }
+}

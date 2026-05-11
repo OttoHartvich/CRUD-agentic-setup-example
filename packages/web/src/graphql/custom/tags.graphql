@@ -1,0 +1,40 @@
+query GetPostsByTag($name: String!) {
+  postsByTag(name: $name) {
+    id
+    title
+    content
+    published
+    createdAt
+    author {
+      id
+      name
+    }
+    tags {
+      id
+      name
+    }
+    comments {
+      id
+    }
+  }
+}
+
+mutation AddTagToPost($postId: ID!, $tagName: String!) {
+  addTagToPost(postId: $postId, tagName: $tagName) {
+    id
+    tags {
+      id
+      name
+    }
+  }
+}
+
+mutation RemoveTagFromPost($postId: ID!, $tagName: String!) {
+  removeTagFromPost(postId: $postId, tagName: $tagName) {
+    id
+    tags {
+      id
+      name
+    }
+  }
+}

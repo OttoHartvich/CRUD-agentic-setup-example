@@ -1,0 +1,28 @@
+{
+  "name": "mock-graphql-prisma",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "npm run prisma:migrate -w @mock/db",
+    "db:seed": "npm run prisma:seed -w @mock/db",
+    "generate:crud": "npm run generate:crud -w @mock/db",
+    "generate:graphql": "npm run generate:graphql -w @mock/server",
+    "generate:operations": "npm run generate:operations -w @mock/web",
+    "generate:hooks": "npm run generate:hooks -w @mock/web",
+    "generate:gql-types": "graphql-codegen --config codegen.ts",
+    "emit:schema": "npm run emit:schema -w @mock/server",
+    "pipeline": "npm run db:migrate && npm run generate:crud && npm run generate:graphql && npm run generate:operations && npm run emit:schema && npm run generate:gql-types && npm run generate:hooks",
+    "dev:server": "npm run dev -w @mock/server",
+    "dev:web": "npm run dev -w @mock/web",
+    "dev": "npm run dev:server & npm run dev:web"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsx": "^4.7.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.2.0",
+    "prettier": "^3.2.0"
+  }
+}

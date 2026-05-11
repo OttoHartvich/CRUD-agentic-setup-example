@@ -1,0 +1,28 @@
+{
+  "name": "@mock/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "generate:operations": "tsx scripts/generate-operations.ts",
+    "generate:hooks": "tsx scripts/generate-hooks.ts"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "jotai": "^2.7.0",
+    "@tanstack/react-query": "^5.24.0",
+    "graphql-request": "^7.0.0",
+    "graphql": "^16.8.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.1.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@mock/db": "*",
+    "tsx": "^4.7.0"
+  }
+}

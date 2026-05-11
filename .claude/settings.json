@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsx *)",
+      "Bash(docker compose *)",
+      "Read",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(npm publish *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo $TOOL_INPUT | jq -r '.file_path // empty'); if [ -n \"$FILE\" ] && [ -f \"$FILE\" ]; then npx prettier --write \"$FILE\" 2>/dev/null; fi",
+            "statusMessage": "Formatting with Prettier"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(echo $TOOL_INPUT | jq -r '.file_path // empty'); if echo \"$FILE\" | grep -qE '(packages/db/src/generated/|packages/web/src/gql/)'; then echo 'This file is auto-generated. Modify the source and re-run the generator instead.' >&2; exit 2; fi; exit 0",
+            "statusMessage": "Checking generated file protection"
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

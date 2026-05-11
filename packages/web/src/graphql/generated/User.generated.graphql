@@ -1,0 +1,44 @@
+# Auto-generated — DO NOT EDIT
+# Default operations for User. Add custom ops in src/graphql/custom/.
+
+fragment UserFields on User {
+  id
+  email
+  name
+  role
+  createdAt
+}
+
+query GetUser($id: ID!) {
+  user(id: $id) {
+    ...UserFields
+  }
+}
+
+query ListUsers {
+  users {
+    ...UserFields
+  }
+}
+
+query CountUsers {
+  usersCount
+}
+
+mutation CreateUser($input: UserCreateInput!) {
+  createUser(input: $input) {
+    ...UserFields
+  }
+}
+
+mutation UpdateUser($id: ID!, $input: UserUpdateInput!) {
+  updateUser(id: $id, input: $input) {
+    ...UserFields
+  }
+}
+
+mutation DeleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    id
+  }
+}

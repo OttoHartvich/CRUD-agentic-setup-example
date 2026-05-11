@@ -1,0 +1,28 @@
+# Auto-generated — DO NOT EDIT
+# Default operations for Post. Add custom ops in src/graphql/custom/.
+
+fragment PostFields on Post {
+  id
+  title
+  content
+  published
+  authorId
+  createdAt
+  updatedAt
+}
+
+query GetPost($id: ID!) {
+  post(id: $id) {
+    ...PostFields
+  }
+}
+
+query CountPosts {
+  postsCount
+}
+
+mutation UpdatePost($id: ID!, $input: PostUpdateInput!) {
+  updatePost(id: $id, input: $input) {
+    ...PostFields
+  }
+}
