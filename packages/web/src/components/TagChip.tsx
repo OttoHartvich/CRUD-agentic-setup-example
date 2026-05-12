@@ -1,12 +1,15 @@
 type TagChipProps = {
   name: string
+  active?: boolean
   onRemove?: () => void
   onClick?: () => void
 }
 
-export function TagChip({ name, onRemove, onClick }: TagChipProps) {
+export function TagChip({ name, active, onRemove, onClick }: TagChipProps) {
+  const className = active ? 'tag active' : 'tag'
   return (
     <span
+      className={className}
       onClick={
         onClick
           ? (e) => {
@@ -15,37 +18,16 @@ export function TagChip({ name, onRemove, onClick }: TagChipProps) {
             }
           : undefined
       }
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
-        padding: '2px 8px',
-        marginRight: 4,
-        fontSize: 12,
-        background: '#eef2ff',
-        color: '#3730a3',
-        border: '1px solid #c7d2fe',
-        borderRadius: 999,
-        cursor: onClick ? 'pointer' : 'default',
-      }}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
       {name}
       {onRemove && (
         <button
           type="button"
+          className="tag-remove"
           onClick={(e) => {
             e.stopPropagation()
             onRemove()
-          }}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            padding: 0,
-            marginLeft: 2,
-            fontSize: 14,
-            lineHeight: 1,
-            color: '#3730a3',
           }}
           aria-label={`Remove tag ${name}`}
         >

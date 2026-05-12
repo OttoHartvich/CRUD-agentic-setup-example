@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mock Blog — Design Prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  :root { --bar: #111; --bar-fg: #fff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #fff; }
+  .switcher {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; gap: 0; background: var(--bar); border-bottom: 1px solid #222;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .switcher button {
+    flex: 1; padding: 14px 12px; background: transparent; color: #888; border: 0;
+    border-right: 1px solid #222; cursor: pointer; letter-spacing: 0.12em; text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  .switcher button:hover { color: #fff; }
+  .switcher button.active { background: #fff; color: #000; }
+  .switcher button:last-child { border-right: 0; }
+  .stage { display: none; min-height: 100vh; }
+  .stage.active { display: block; }
+
+  /* ============================================================
+     PROTOTYPE 1 — FUTURISTIC
+     Glass, neon cyan, monospace, blur, terminal hud
+     ============================================================ */
+  .p1 {
+    font-family: 'JetBrains Mono', monospace;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(0,255,234,0.12), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(120,80,255,0.15), transparent 50%),
+      linear-gradient(180deg, #050b14 0%, #02050a 100%);
+    color: #d8f8ff;
+    min-height: 100vh;
+  }
+  .p1::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,255,234,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,234,0.05) 1px, transparent 1px);
+    background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+  .p1 .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px; position: relative; }
+  .p1 header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
+    padding: 16px 20px; border: 1px solid rgba(0,255,234,0.25); border-radius: 4px;
+    background: rgba(8,18,28,0.6); backdrop-filter: blur(8px);
+  }
+  .p1 .brand { display: flex; align-items: center; gap: 12px; }
+  .p1 .brand .dot { width: 8px; height: 8px; background: #00ffea; border-radius: 50%; box-shadow: 0 0 12px #00ffea; animation: pulse 1.6s infinite; }
+  .p1 .brand h1 { margin: 0; font-size: 14px; letter-spacing: 0.3em; text-transform: uppercase; color: #00ffea; }
+  .p1 .brand small { color: #4a7a8a; font-size: 10px; letter-spacing: 0.2em; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .p1 .btn {
+    font-family: inherit; font-size: 11px; padding: 10px 18px; letter-spacing: 0.25em; text-transform: uppercase;
+    background: transparent; color: #00ffea; border: 1px solid #00ffea; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .p1 .btn:hover { background: #00ffea; color: #000; box-shadow: 0 0 20px rgba(0,255,234,0.6); }
+  .p1 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; padding: 12px; border: 1px dashed rgba(0,255,234,0.2); }
+  .p1 .tag {
+    font-size: 10px; padding: 4px 10px; border: 1px solid rgba(0,255,234,0.35);
+    color: #7adfd0; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+  }
+  .p1 .tag.active { background: #00ffea; color: #000; border-color: #00ffea; }
+  .p1 .filter-row { font-size: 11px; color: #5a8a9a; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; }
+  .p1 .filter-row input { accent-color: #00ffea; }
+  .p1 article {
+    margin-bottom: 16px; padding: 20px; border: 1px solid rgba(0,255,234,0.18);
+    background: linear-gradient(135deg, rgba(8,18,28,0.7), rgba(4,10,18,0.4));
+    backdrop-filter: blur(6px); position: relative; cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .p1 article::before { content: ""; position: absolute; top: -1px; left: -1px; width: 12px; height: 12px; border-top: 2px solid #00ffea; border-left: 2px solid #00ffea; }
+  .p1 article::after { content: ""; position: absolute; bottom: -1px; right: -1px; width: 12px; height: 12px; border-bottom: 2px solid #00ffea; border-right: 2px solid #00ffea; }
+  .p1 article:hover { border-color: #00ffea; transform: translateY(-2px); }
+  .p1 article h3 { margin: 0 0 8px; font-size: 16px; color: #fff; letter-spacing: 0.05em; }
+  .p1 article .meta { font-size: 10px; color: #5a8a9a; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
+  .p1 article p.body { margin: 0 0 12px; color: #b8d8e0; font-size: 13px; line-height: 1.6; font-family: 'Space Grotesk', sans-serif; }
+  .p1 article .footer-row { display: flex; justify-content: space-between; font-size: 10px; color: #4a7a8a; letter-spacing: 0.15em; text-transform: uppercase; }
+  .p1 article .draft { color: #ff7a00; border: 1px solid #ff7a00; padding: 2px 6px; font-size: 9px; letter-spacing: 0.2em; }
+  .p1 .hud { position: fixed; bottom: 16px; right: 16px; font-size: 10px; color: #00ffea; letter-spacing: 0.2em; opacity: 0.6; }
+
+  /* ============================================================
+     PROTOTYPE 2 — NATURAL
+     Warm paper, serif, earth tones, soft shapes
+     ============================================================ */
+  .p2 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: #f4ebdc;
+    color: #2a2418;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(180,120,60,0.08), transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(80,120,60,0.08), transparent 40%);
+  }
+  .p2 .wrap { max-width: 760px; margin: 0 auto; padding: 56px 32px; }
+  .p2 header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 48px; padding-bottom: 24px;
+    border-bottom: 1px solid #c8b896;
+  }
+  .p2 header h1 {
+    margin: 0; font-size: 36px; font-weight: 500; font-style: italic;
+    color: #4a3820; letter-spacing: -0.01em;
+  }
+  .p2 header h1::first-letter { font-size: 56px; float: left; line-height: 0.9; margin-right: 4px; color: #8a5a2a; }
+  .p2 header small { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #8a7a5a; display: block; }
+  .p2 .btn {
+    font-family: 'Inter', sans-serif; font-size: 12px; padding: 12px 24px;
+    background: #4a3820; color: #f4ebdc; border: 0; border-radius: 999px;
+    letter-spacing: 0.1em; cursor: pointer; transition: background 0.2s;
+  }
+  .p2 .btn:hover { background: #6a4a28; }
+  .p2 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .p2 .tag {
+    font-family: 'Inter', sans-serif; font-size: 12px; padding: 6px 14px;
+    background: #e8d8be; color: #4a3820; border-radius: 999px; cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .p2 .tag.active { background: #4a3820; color: #f4ebdc; }
+  .p2 .filter-row { font-family: 'Inter', sans-serif; font-size: 13px; color: #6a5a3a; margin-bottom: 32px; }
+  .p2 article {
+    margin-bottom: 32px; padding: 28px 32px; background: #fbf6ea;
+    border-radius: 18px; box-shadow: 0 1px 0 rgba(74,56,32,0.08), 0 8px 28px -12px rgba(74,56,32,0.15);
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .p2 article:hover { transform: translateY(-2px); box-shadow: 0 1px 0 rgba(74,56,32,0.08), 0 14px 36px -14px rgba(74,56,32,0.25); }
+  .p2 article h3 { margin: 0 0 6px; font-size: 26px; font-weight: 500; color: #2a2418; line-height: 1.2; }
+  .p2 article .meta { font-family: 'Inter', sans-serif; font-size: 12px; color: #8a7a5a; margin-bottom: 14px; letter-spacing: 0.05em; }
+  .p2 article p.body { margin: 0 0 14px; font-size: 17px; line-height: 1.55; color: #4a3820; }
+  .p2 article .footer-row { display: flex; justify-content: space-between; align-items: center; font-family: 'Inter', sans-serif; font-size: 12px; color: #8a7a5a; }
+  .p2 article .draft { font-style: italic; color: #b8801a; }
+  .p2 article .post-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .p2 article .post-tags span { font-size: 11px; padding: 3px 10px; background: #efe2c8; border-radius: 999px; color: #6a4a28; }
+
+  /* ============================================================
+     PROTOTYPE 3 — CLEAN / LOW NOISE
+     Whitespace, monochrome, single accent, typography-first
+     ============================================================ */
+  .p3 {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #fafafa;
+    color: #111;
+    min-height: 100vh;
+  }
+  .p3 .wrap { max-width: 680px; margin: 0 auto; padding: 80px 24px; }
+  .p3 header { margin-bottom: 64px; }
+  .p3 header .row { display: flex; justify-content: space-between; align-items: center; }
+  .p3 header h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .p3 header small { font-size: 13px; color: #999; font-weight: 400; display: block; margin-top: 4px; }
+  .p3 .btn {
+    font-family: inherit; font-size: 14px; padding: 10px 18px; font-weight: 500;
+    background: #111; color: #fff; border: 0; border-radius: 8px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .p3 .btn:hover { background: #333; }
+  .p3 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .p3 .tag {
+    font-size: 13px; padding: 4px 10px; background: transparent; color: #666;
+    border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .p3 .tag:hover { background: #efefef; color: #111; }
+  .p3 .tag.active { background: #111; color: #fff; }
+  .p3 .filter-row { font-size: 13px; color: #999; margin-bottom: 40px; display: flex; gap: 16px; align-items: center; }
+  .p3 article {
+    padding: 32px 0; border-bottom: 1px solid #eee; cursor: pointer;
+  }
+  .p3 article:last-child { border-bottom: 0; }
+  .p3 article h3 {
+    margin: 0 0 6px; font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: #111;
+    transition: color 0.15s;
+  }
+  .p3 article:hover h3 { color: #555; }
+  .p3 article .meta { font-size: 13px; color: #999; margin-bottom: 12px; }
+  .p3 article p.body { margin: 0 0 12px; color: #444; line-height: 1.6; font-size: 15px; }
+  .p3 article .footer-row { display: flex; justify-content: space-between; font-size: 13px; color: #999; }
+  .p3 article .draft { color: #c08000; font-weight: 500; }
+  .p3 article .post-tags { display: flex; gap: 6px; }
+  .p3 article .post-tags span { font-size: 12px; color: #999; }
+  .p3 article .post-tags span::before { content: "#"; }
+
+  /* ============================================================
+     PROTOTYPE 4 — 80s SYNTHWAVE
+     Magenta, cyan, sun grid, scanlines, neon
+     ============================================================ */
+  .p4 {
+    font-family: 'Space Grotesk', sans-serif;
+    background: #0d0226;
+    color: #f0e6ff;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .p4::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(180deg, transparent 0%, transparent 60%, #ff2bd6 60.5%, transparent 61%),
+      linear-gradient(180deg, #1a0540 0%, #0d0226 50%, #2a0866 100%);
+    z-index: 0;
+  }
+  .p4::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+  }
+  .p4 .sun {
+    position: fixed; top: 8%; left: 50%; transform: translateX(-50%);
+    width: 280px; height: 280px; border-radius: 50%;
+    background: linear-gradient(180deg, #ffea00 0%, #ff2bd6 60%, #6e00ff 100%);
+    box-shadow: 0 0 80px rgba(255,43,214,0.5);
+    z-index: 0; opacity: 0.85;
+  }
+  .p4 .sun::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: repeating-linear-gradient(0deg, transparent 0 18px, #0d0226 18px 22px, transparent 22px 28px, #0d0226 28px 34px, transparent 34px 44px, #0d0226 44px 52px);
+    mix-blend-mode: normal;
+  }
+  .p4 .grid-floor {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 40vh;
+    background:
+      linear-gradient(180deg, transparent 0%, #0d0226 90%),
+      linear-gradient(90deg, transparent 49.8%, #ff2bd6 49.8%, #ff2bd6 50.2%, transparent 50.2%),
+      repeating-linear-gradient(90deg, transparent 0 60px, rgba(0,238,255,0.35) 60px 61px),
+      repeating-linear-gradient(0deg, transparent 0 40px, rgba(0,238,255,0.35) 40px 41px);
+    transform: perspective(400px) rotateX(60deg);
+    transform-origin: center top;
+    z-index: 0;
+  }
+  .p4 .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px; position: relative; z-index: 2; }
+  .p4 header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;
+    padding-bottom: 20px;
+  }
+  .p4 header h1 {
+    margin: 0; font-family: 'Press Start 2P', monospace; font-size: 22px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #ff2bd6, 4px 4px 0 #00eeff, 6px 6px 20px rgba(255,43,214,0.5);
+    letter-spacing: 0.04em;
+  }
+  .p4 header small { font-family: 'VT323', monospace; font-size: 16px; color: #00eeff; letter-spacing: 0.15em; display: block; margin-top: 6px; }
+  .p4 .btn {
+    font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 14px 20px;
+    background: linear-gradient(180deg, #ff2bd6, #6e00ff); color: #fff; border: 2px solid #00eeff;
+    box-shadow: 4px 4px 0 #00eeff, 0 0 20px rgba(255,43,214,0.4);
+    cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: transform 0.1s;
+  }
+  .p4 .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #00eeff, 0 0 30px rgba(255,43,214,0.6); }
+  .p4 .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #00eeff; }
+  .p4 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .p4 .tag {
+    font-family: 'VT323', monospace; font-size: 16px; padding: 4px 12px;
+    background: transparent; color: #00eeff; border: 1px solid #00eeff; cursor: pointer;
+    text-shadow: 0 0 6px rgba(0,238,255,0.6); letter-spacing: 0.1em;
+  }
+  .p4 .tag.active { background: #ff2bd6; color: #fff; border-color: #ff2bd6; text-shadow: 0 0 8px rgba(255,43,214,0.8); }
+  .p4 .filter-row { font-family: 'VT323', monospace; font-size: 16px; color: #ffea00; margin-bottom: 24px; letter-spacing: 0.1em; }
+  .p4 article {
+    margin-bottom: 20px; padding: 22px 24px;
+    background: linear-gradient(135deg, rgba(13,2,38,0.85), rgba(42,8,102,0.6));
+    border: 2px solid #ff2bd6;
+    box-shadow: 0 0 0 1px #00eeff inset, 6px 6px 0 rgba(0,238,255,0.3), 0 0 30px rgba(255,43,214,0.25);
+    cursor: pointer; position: relative;
+  }
+  .p4 article:hover { box-shadow: 0 0 0 1px #00eeff inset, 8px 8px 0 rgba(0,238,255,0.5), 0 0 40px rgba(255,43,214,0.4); }
+  .p4 article h3 {
+    margin: 0 0 6px; font-family: 'Press Start 2P', monospace; font-size: 13px;
+    color: #fff; line-height: 1.5; text-shadow: 1px 1px 0 #ff2bd6;
+  }
+  .p4 article .meta { font-family: 'VT323', monospace; font-size: 16px; color: #00eeff; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .p4 article p.body { margin: 0 0 14px; color: #f0e6ff; line-height: 1.5; font-size: 14px; }
+  .p4 article .footer-row { display: flex; justify-content: space-between; align-items: center; font-family: 'VT323', monospace; font-size: 15px; color: #ffea00; letter-spacing: 0.08em; }
+  .p4 article .draft { background: #ffea00; color: #0d0226; padding: 2px 8px; font-family: 'Press Start 2P', monospace; font-size: 8px; }
+  .p4 article .post-tags { display: flex; gap: 6px; }
+  .p4 article .post-tags span { font-size: 14px; color: #00eeff; }
+  .p4 article .post-tags span::before { content: ">"; margin-right: 2px; color: #ff2bd6; }
+</style>
+</head>
+<body>
+
+<nav class="switcher">
+  <button data-stage="p1" class="active">01 · Futuristic</button>
+  <button data-stage="p2">02 · Natural</button>
+  <button data-stage="p3">03 · Clean / Low Noise</button>
+  <button data-stage="p4">04 · 80s</button>
+</nav>
+
+<!-- ====================== PROTOTYPE 1: FUTURISTIC ====================== -->
+<section class="stage active p1" id="p1">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span class="dot"></span>
+        <div>
+          <h1>Mock // Blog</h1>
+          <small>NODE-04 · SYS::ACTIVE</small>
+        </div>
+      </div>
+      <button class="btn">+ New Post</button>
+    </header>
+
+    <div class="tags">
+      <span class="tag active">all</span>
+      <span class="tag">graphql</span>
+      <span class="tag">prisma</span>
+      <span class="tag">react</span>
+      <span class="tag">jotai</span>
+      <span class="tag">codegen</span>
+    </div>
+
+    <div class="filter-row">
+      <label><input type="checkbox" checked /> SHOW PUBLISHED ONLY</label>
+      <span style="margin-left:auto">// 03 RESULTS</span>
+    </div>
+
+    <article>
+      <h3>Schema-First GraphQL with Prisma DMMF</h3>
+      <div class="meta">[ ada.lovelace ] · 2026.05.10 · 04 COMMENTS</div>
+      <p class="body">A single source of truth — `schema.prisma` — cascades through codegen into CRUD funcs, SDL, default resolvers, typed documents, and hooks. The agent layer handles judgment work on top.</p>
+      <div class="footer-row">
+        <span>// tagged: graphql · prisma · codegen</span>
+        <span>↗ open</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>Jotai for UI · TanStack for Server State</h3>
+      <div class="meta">[ alan.turing ] · 2026.05.08 · 01 COMMENT</div>
+      <p class="body">Atoms hold ephemeral interface state. Query hooks own server state. The two layers never blur — a clean partition that scales without ceremony.</p>
+      <div class="footer-row">
+        <span>// tagged: react · jotai</span>
+        <span>↗ open</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>Overriding Generated Resolvers <span class="draft">DRAFT</span></h3>
+      <div class="meta">[ grace.hopper ] · 2026.05.06 · 00 COMMENTS</div>
+      <p class="body">Custom mutations claim fields via `overrides.json`. The generator skips them; the agent layer takes responsibility. Auth and validation live where they belong.</p>
+      <div class="footer-row">
+        <span>// tagged: graphql · codegen</span>
+        <span>↗ open</span>
+      </div>
+    </article>
+  </div>
+  <div class="hud">SYNC OK · 12ms</div>
+</section>
+
+<!-- ====================== PROTOTYPE 2: NATURAL ====================== -->
+<section class="stage p2" id="p2">
+  <div class="wrap">
+    <header>
+      <div>
+        <small>A field journal</small>
+        <h1>Mock Blog</h1>
+      </div>
+      <button class="btn">Write a new post</button>
+    </header>
+
+    <div class="tags">
+      <span class="tag active">all</span>
+      <span class="tag">graphql</span>
+      <span class="tag">prisma</span>
+      <span class="tag">react</span>
+      <span class="tag">jotai</span>
+      <span class="tag">codegen</span>
+    </div>
+
+    <div class="filter-row">
+      <label><input type="checkbox" checked /> Show only published</label>
+    </div>
+
+    <article>
+      <h3>Schema-first GraphQL with Prisma DMMF</h3>
+      <div class="meta">By Ada Lovelace · May 10, 2026 · 4 comments</div>
+      <p class="body">A single source of truth — <em>schema.prisma</em> — cascades through codegen into CRUD funcs, SDL, default resolvers, typed documents, and hooks. The agent layer handles the judgment work on top: validation, authorization, composition.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>prisma</span><span>codegen</span></div>
+        <span>Read more →</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>Jotai for the UI, TanStack for the server</h3>
+      <div class="meta">By Alan Turing · May 8, 2026 · 1 comment</div>
+      <p class="body">Atoms hold ephemeral interface state. Query hooks own server state. The two layers never blur — a clean partition that scales without ceremony or framework overhead.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>react</span><span>jotai</span></div>
+        <span>Read more →</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>Overriding generated resolvers <span class="draft">— a draft</span></h3>
+      <div class="meta">By Grace Hopper · May 6, 2026 · No comments yet</div>
+      <p class="body">Custom mutations claim fields via <em>overrides.json</em>. The generator skips them; the agent layer takes responsibility. Auth and validation live where they belong — close to the business rules they enforce.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>codegen</span></div>
+        <span>Read more →</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ====================== PROTOTYPE 3: CLEAN / LOW NOISE ====================== -->
+<section class="stage p3" id="p3">
+  <div class="wrap">
+    <header>
+      <div class="row">
+        <div>
+          <h1>Mock Blog</h1>
+          <small>Notes on schema-first development</small>
+        </div>
+        <button class="btn">New post</button>
+      </div>
+    </header>
+
+    <div class="tags">
+      <span class="tag active">All</span>
+      <span class="tag">graphql</span>
+      <span class="tag">prisma</span>
+      <span class="tag">react</span>
+      <span class="tag">jotai</span>
+      <span class="tag">codegen</span>
+    </div>
+
+    <div class="filter-row">
+      <label><input type="checkbox" checked style="accent-color:#111" /> Show only published</label>
+    </div>
+
+    <article>
+      <h3>Schema-first GraphQL with Prisma DMMF</h3>
+      <div class="meta">Ada Lovelace · May 10 · 4 comments</div>
+      <p class="body">A single source of truth — schema.prisma — cascades through codegen into CRUD funcs, SDL, default resolvers, typed documents, and hooks.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>prisma</span><span>codegen</span></div>
+      </div>
+    </article>
+
+    <article>
+      <h3>Jotai for UI, TanStack for server state</h3>
+      <div class="meta">Alan Turing · May 8 · 1 comment</div>
+      <p class="body">Atoms hold ephemeral interface state. Query hooks own server state. A clean partition that scales without ceremony.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>react</span><span>jotai</span></div>
+      </div>
+    </article>
+
+    <article>
+      <h3>Overriding generated resolvers <span class="draft">· Draft</span></h3>
+      <div class="meta">Grace Hopper · May 6 · 0 comments</div>
+      <p class="body">Custom mutations claim fields via overrides.json. The generator skips them; the agent layer takes responsibility.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>codegen</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ====================== PROTOTYPE 4: 80s SYNTHWAVE ====================== -->
+<section class="stage p4" id="p4">
+  <div class="sun"></div>
+  <div class="grid-floor"></div>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>MOCK BLOG</h1>
+        <small>&gt; CHANNEL_04 // BROADCASTING</small>
+      </div>
+      <button class="btn">+ NEW POST</button>
+    </header>
+
+    <div class="tags">
+      <span class="tag active">ALL</span>
+      <span class="tag">GRAPHQL</span>
+      <span class="tag">PRISMA</span>
+      <span class="tag">REACT</span>
+      <span class="tag">JOTAI</span>
+      <span class="tag">CODEGEN</span>
+    </div>
+
+    <div class="filter-row">&gt; FILTER: PUBLISHED_ONLY = TRUE &nbsp;|&nbsp; RESULTS = 03</div>
+
+    <article>
+      <h3>SCHEMA-FIRST GRAPHQL</h3>
+      <div class="meta">&gt; AUTHOR: ADA.LOVELACE &nbsp;//&nbsp; 05.10.2026</div>
+      <p class="body">A single source of truth cascades through codegen into CRUD funcs, SDL, default resolvers, typed documents, and hooks. The agent layer handles judgment work on top.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>prisma</span><span>codegen</span></div>
+        <span>04 COMMENTS</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>JOTAI VS TANSTACK</h3>
+      <div class="meta">&gt; AUTHOR: ALAN.TURING &nbsp;//&nbsp; 05.08.2026</div>
+      <p class="body">Atoms hold UI state. Query hooks own server state. A clean partition that scales without ceremony or framework overhead.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>react</span><span>jotai</span></div>
+        <span>01 COMMENT</span>
+      </div>
+    </article>
+
+    <article>
+      <h3>RESOLVER OVERRIDES <span class="draft">DRAFT</span></h3>
+      <div class="meta">&gt; AUTHOR: GRACE.HOPPER &nbsp;//&nbsp; 05.06.2026</div>
+      <p class="body">Custom mutations claim fields via overrides.json. The generator skips them; the agent layer takes responsibility. Auth and validation live where they belong.</p>
+      <div class="footer-row">
+        <div class="post-tags"><span>graphql</span><span>codegen</span></div>
+        <span>00 COMMENTS</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+  const buttons = document.querySelectorAll('.switcher button');
+  const stages = document.querySelectorAll('.stage');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.stage;
+      buttons.forEach(b => b.classList.toggle('active', b === btn));
+      stages.forEach(s => s.classList.toggle('active', s.id === id));
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
+</script>
+
+</body>
+</html>

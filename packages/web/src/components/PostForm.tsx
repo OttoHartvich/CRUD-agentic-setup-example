@@ -69,7 +69,6 @@ export function PostForm() {
           }
           if (errors.length > 0) {
             setTagAttachErrors(errors)
-            // Keep modal open and preserve form state so the user can retry
             return
           }
           setTitle('')
@@ -84,63 +83,84 @@ export function PostForm() {
   const submitDisabled = createPost.isPending || isAttachingTags
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <form onSubmit={handleSubmit} style={{ background: 'white', padding: 24, borderRadius: 8, width: 400 }}>
-        <h2 style={{ marginTop: 0 }}>New Post</h2>
-        <div style={{ marginBottom: 12 }}>
-          <label>Title</label>
+    <div className="modal-overlay" onClick={() => setIsOpen(false)}>
+      <form
+        className="modal-panel"
+        onSubmit={handleSubmit}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="modal-title">// NEW POST</h2>
+
+        <div className="field">
+          <label className="field-label">Title</label>
           <input
+            className="input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
             required
           />
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>Content</label>
+
+        <div className="field">
+          <label className="field-label">Content</label>
           <textarea
+            className="textarea"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            rows={5}
-            style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
+            rows={6}
             required
           />
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>Tags</label>
-          <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+
+        <div className="field">
+          <label className="field-label">Tags</label>
+          <div className="field-row">
             <input
+              className="input"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleTagInputKeyDown}
               placeholder="Add a tag"
-              style={{ flex: 1, padding: 8 }}
+              style={{ flex: 1 }}
             />
-            <button type="button" onClick={addPendingTag} disabled={!canAddTag}>
-              Add tag
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={addPendingTag}
+              disabled={!canAddTag}
+            >
+              + Tag
             </button>
           </div>
           {pendingTags.length > 0 && (
-            <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+            <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {pendingTags.map((name) => (
                 <TagChip key={name} name={name} onRemove={() => removePendingTag(name)} />
               ))}
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-          <button type="button" onClick={() => setIsOpen(false)}>Cancel</button>
-          <button type="submit" disabled={submitDisabled}>
-            {createPost.isPending ? 'Creating...' : isAttachingTags ? 'Attaching tags...' : 'Create'}
+
+        <div className="modal-actions">
+          <button type="button" className="btn btn-ghost" onClick={() => setIsOpen(false)}>
+            Cancel
+          </button>
+          <button type="submit" className="btn" disabled={submitDisabled}>
+            {createPost.isPending
+              ? 'Creating...'
+              : isAttachingTags
+              ? 'Attaching...'
+              : 'Create'}
           </button>
         </div>
+
         {createPost.isError && (
-          <p style={{ color: 'red', marginTop: 8 }}>Error: {formatError(createPost.error)}</p>
+          <p className="error-text">Error: {formatError(createPost.error)}</p>
         )}
         {tagAttachErrors.length > 0 && (
           <div style={{ marginTop: 8 }}>
             {tagAttachErrors.map((msg, i) => (
-              <p key={i} style={{ color: 'red', margin: '4px 0' }}>{msg}</p>
+              <p key={i} className="error-text">{msg}</p>
             ))}
           </div>
         )}

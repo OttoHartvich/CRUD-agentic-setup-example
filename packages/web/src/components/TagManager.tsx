@@ -25,25 +25,24 @@ export function TagManager() {
   }
 
   return (
-    <div
-      style={{
-        marginBottom: 16,
-        padding: 12,
-        border: '1px solid #ddd',
-        borderRadius: 8,
-      }}
-    >
-      <h3 style={{ margin: '0 0 8px', fontSize: 14 }}>Tags</h3>
+    <div className="panel">
+      <h3 className="panel-title">// TAGS</h3>
 
-      <div style={{ marginBottom: 8, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-        {isLoading && <span style={{ fontSize: 12, color: '#666' }}>Loading tags...</span>}
+      <div style={{ marginBottom: 12, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {isLoading && (
+          <span style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            // loading tags...
+          </span>
+        )}
         {listError && (
-          <span style={{ fontSize: 12, color: '#b91c1c' }}>
+          <span className="error-text" style={{ margin: 0 }}>
             Error loading tags: {formatError(listError)}
           </span>
         )}
         {!isLoading && !listError && tags.length === 0 && (
-          <span style={{ fontSize: 12, color: '#666' }}>No tags yet.</span>
+          <span style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+            // no tags yet
+          </span>
         )}
         {tags.map((tag) => (
           <TagChip key={tag.id} name={tag.name} />
@@ -55,9 +54,10 @@ export function TagManager() {
           e.preventDefault()
           handleSubmit()
         }}
-        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+        className="field-row"
       >
         <input
+          className="input"
           type="text"
           value={name}
           onChange={(e) => {
@@ -67,41 +67,19 @@ export function TagManager() {
             }
           }}
           placeholder="New tag name"
-          style={{
-            padding: '6px 10px',
-            border: '1px solid #ddd',
-            borderRadius: 6,
-            fontSize: 14,
-            flex: 1,
-            maxWidth: 240,
-          }}
+          style={{ flex: 1, maxWidth: 280 }}
         />
         <button
           type="submit"
+          className="btn btn-ghost"
           disabled={createTag.isPending || trimmed.length === 0}
-          style={{
-            padding: '6px 12px',
-            border: '1px solid #ddd',
-            borderRadius: 6,
-            background: createTag.isPending ? '#f3f4f6' : '#fff',
-            cursor: createTag.isPending ? 'not-allowed' : 'pointer',
-            fontSize: 12,
-          }}
         >
-          {createTag.isPending ? 'Creating...' : 'Create'}
+          {createTag.isPending ? 'Creating...' : '+ Create'}
         </button>
       </form>
 
       {createTag.error && (
-        <p
-          style={{
-            margin: '6px 0 0',
-            fontSize: 12,
-            color: '#b91c1c',
-          }}
-        >
-          {formatError(createTag.error)}
-        </p>
+        <p className="error-text">{formatError(createTag.error)}</p>
       )}
     </div>
   )

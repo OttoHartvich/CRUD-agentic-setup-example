@@ -6,9 +6,9 @@ import {
 } from '../atoms/ui.atoms'
 import { usePosts } from '../hooks/usePosts'
 import { usePostsByTag } from '../hooks/usePostsByTag'
+import { useListTags } from '../hooks/generated/tag.hooks'
 import { formatError } from '../lib/format-error'
-import { TagChip } from './TagChip'
-import { TagFilter } from './TagFilter'
+import { authorHandle, formatDate, pad2 } from '../lib/format'
 
 export function PostList() {
   const [filterPublished, setFilterPublished] = useAtom(filterPublishedAtom)
@@ -18,62 +18,102 @@ export function PostList() {
 
   const postsQuery = usePosts(filterPublished)
   const postsByTagQuery = usePostsByTag(activeTag)
+  const tagsQuery = useListTags()
 
   const isFiltering = Boolean(activeTag)
-  const { data, isLoading, error } = isFiltering ? postsByTagQuery : postsQuery
-
-  if (isLoading) return <p>Loading posts...</p>
-  if (error) return <p>Error loading posts: {formatError(error)}</p>
+  const { isLoading, error } = isFiltering ? postsByTagQuery : postsQuery
 
   const posts = isFiltering
     ? postsByTagQuery.data?.postsByTag ?? []
     : postsQuery.data?.posts ?? []
 
+  const tags = tagsQuery.data?.tags ?? []
+
   return (
     <div>
-      <TagFilter />
+      <div className="tags" role="list">
+        <span
+          className={`tag${!activeTag ? ' active' : ''}`}
+          onClick={() => setActiveTag('')}
+        >
+          all
+        </span>
+        {tags.map((tag) => (
+          <span
+            key={tag.id}
+            className={`tag${activeTag === tag.name ? ' active' : ''}`}
+            onClick={() => setActiveTag(tag.name)}
+          >
+            {tag.name}
+          </span>
+        ))}
+      </div>
 
       {!isFiltering && (
-        <div style={{ marginBottom: 16 }}>
+        <div className="filter-row">
           <label>
             <input
               type="checkbox"
               checked={filterPublished === true}
-              onChange={(e) => setFilterPublished(e.target.checked ? true : undefined)}
+              onChange={(e) =>
+                setFilterPublished(e.target.checked ? true : undefined)
+              }
             />
-            {' '}Show only published
+            {' '}// SHOW PUBLISHED ONLY
           </label>
+          <span className="results">// {pad2(posts.length)} RESULTS</span>
         </div>
       )}
 
-      {posts.length === 0 && <p>No posts found.</p>}
+      {isFiltering && (
+        <div className="filter-row">
+          <span>// FILTER: {activeTag.toUpperCase()}</span>
+          <span className="results">// {pad2(posts.length)} RESULTS</span>
+        </div>
+      )}
 
-      {posts.map((post) => (
-        <article
-          key={post.id}
-          onClick={() => setSelectedPostId(post.id)}
-          style={{ padding: 16, marginBottom: 12, border: '1px solid #ddd', borderRadius: 8, cursor: 'pointer' }}
-        >
-          <h3 style={{ margin: '0 0 8px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 4 }}>
-            <span>{post.title}</span>
-            {!post.published && <span style={{ color: '#999', fontSize: 12, marginLeft: 8 }}>Draft</span>}
-            {post.tags.map((tag) => (
-              <TagChip
-                key={tag.id}
-                name={tag.name}
-                onClick={() => setActiveTag(tag.name)}
-              />
-            ))}
-          </h3>
-          <p style={{ color: '#666', margin: '0 0 8px' }}>
-            By {post.author.name} &middot; {new Date(post.createdAt).toLocaleDateString()}
-          </p>
-          <p style={{ margin: 0 }}>{post.content.slice(0, 150)}{post.content.length > 150 ? '...' : ''}</p>
-          <p style={{ color: '#999', fontSize: 12, margin: '8px 0 0' }}>
-            {post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}
-          </p>
-        </article>
-      ))}
+      {isLoading && <p className="empty-msg">// loading posts...</p>}
+      {error && (
+        <p className="empty-msg" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>
+          // error: {formatError(error)}
+        </p>
+      )}
+      {!isLoading && !error && posts.length === 0 && (
+        <p className="empty-msg">// no posts found</p>
+      )}
+
+      {posts.map((post) => {
+        const commentCount = post.comments.length
+        const tagNames = post.tags.map((t) => t.name)
+        return (
+          <article
+            key={post.id}
+            className="post-card"
+            onClick={() => setSelectedPostId(post.id)}
+          >
+            <h3>
+              <span>{post.title}</span>
+              {!post.published && <span className="draft">DRAFT</span>}
+            </h3>
+            <div className="meta">
+              [ {authorHandle(post.author.name)} ] · {formatDate(post.createdAt)} · {pad2(commentCount)}{' '}
+              {commentCount === 1 ? 'COMMENT' : 'COMMENTS'}
+            </div>
+            <p className="body">
+              {post.content.slice(0, 200)}
+              {post.content.length > 200 ? '...' : ''}
+            </p>
+            <div className="footer-row">
+              <span>
+                {tagNames.length > 0
+                  ? `// tagged: ${tagNames.join(' · ')}`
+                  : '// untagged'}
+              </span>
+              <span>↗ open</span>
+            </div>
+          </article>
+        )
+      })}
     </div>
   )
 }
