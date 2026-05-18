@@ -5,6 +5,7 @@ import { usePost } from '../hooks/usePost'
 import { useAddComment } from '../hooks/useAddComment'
 import { formatError } from '../lib/format-error'
 import { authorHandle, formatDate, pad2 } from '../lib/format'
+import { LikeButton } from './LikeButton'
 
 export function CommentSection() {
   const [selectedPostId, setSelectedPostId] = useAtom(selectedPostIdAtom)
@@ -42,6 +43,14 @@ export function CommentSection() {
               [ {authorHandle(post.author.name)} ]
             </p>
             <p className="post-body">{post.content}</p>
+
+            <div style={{ marginTop: 12, marginBottom: 4 }}>
+              <LikeButton
+                postId={post.id}
+                likeCount={post.likeCount}
+                viewerHasLiked={post.viewerHasLiked}
+              />
+            </div>
 
             <h3 className="panel-title" style={{ marginTop: 24 }}>
               // COMMENTS ({pad2(post.comments.length)})

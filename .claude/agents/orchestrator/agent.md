@@ -20,7 +20,7 @@ Given a user request that describes a feature ("add likes", "let admins ban user
 7. code-reviewer    →  audit the diff
 8. route fixes      →  if review returns findings, send each back to the agent that authored that file; re-review until LGTM or 2 iterations elapsed
 ```
-
+   
 ## When to skip steps
 - **No schema change** (e.g., "show a count from existing data"): skip step 1+2, jump to step 3 or 6.
 - **No custom logic** (default CRUD is enough): skip steps 3–5; the generated GraphQL ops + hooks are sufficient.

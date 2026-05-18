@@ -1,12 +1,14 @@
 # Mock GraphQL + Prisma Demo
 
 ## Stack
+
 - **Monorepo**: npm workspaces with 3 packages (`packages/db`, `packages/server`, `packages/web`)
 - **DB**: Prisma ORM + PostgreSQL (Docker)
 - **API**: GraphQL Yoga
 - **Frontend**: React + Vite + Jotai (atoms) + TanStack Query
 
 ## Generation Pipeline
+
 `schema.prisma` is the single source of truth. The pipeline cascades changes:
 
 1. **`generate:crud`** — Prisma DMMF → `packages/db/src/generated/` (CRUD funcs + `paginate`, `count`, `upsert`, `findFirst`)
@@ -17,6 +19,7 @@
 6. **`generate:hooks`** — DMMF + generated docs → `packages/web/src/hooks/generated/` (TanStack Query hooks per model)
 
 ### Agent layer (the judgment work)
+
 - Services in `packages/db/src/services/` add business logic (auth, validation, composition) on top of generated CRUD
 - Custom GraphQL ops in `packages/server/src/schema/custom/` declare auth-aware mutations and queries with non-default signatures
 - `packages/server/src/schema/custom/overrides.json` lists fields the custom layer claims so the generator skips them
@@ -25,6 +28,7 @@
 - React components compose generated + custom hooks + Jotai atoms
 
 ## Commands
+
 ```
 npm run db:up              # Start PostgreSQL via Docker
 npm run db:migrate         # Run Prisma migrations + generate client
@@ -40,6 +44,7 @@ npm run dev:web            # Start Vite dev server
 ```
 
 ## Conventions
+
 - **Never edit** auto-generated dirs: `packages/db/src/generated/`, `packages/server/src/schema/generated/`, `packages/web/src/graphql/generated/`, `packages/web/src/gql/`, `packages/web/src/hooks/generated/`
 - Services import from `generated/` CRUD, never use PrismaClient directly
 - Custom resolvers import from services, never from PrismaClient or generated CRUD directly
@@ -48,7 +53,9 @@ npm run dev:web            # Start Vite dev server
 - UI state lives in Jotai atoms (`atoms/`), server state in TanStack Query hooks
 
 ## Agents
+
 Specialist agents under `.claude/agents/`:
+
 - `schema-design` — edits `schema.prisma`
 - `business-logic` — writes services + custom GraphQL ops
 - `frontend` — writes React components + custom hooks
@@ -56,6 +63,7 @@ Specialist agents under `.claude/agents/`:
 - `orchestrator` — chains the above for end-to-end features and routes review findings back to the implementing agent
 
 ## File Structure
+
 Stable scaffolding shown as files; dynamic dirs (📂) described by purpose — contents grow per model/feature/migration and are not worth tracking individually.
 
 ```

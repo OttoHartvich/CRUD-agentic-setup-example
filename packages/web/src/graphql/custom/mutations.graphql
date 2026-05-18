@@ -39,3 +39,10 @@ mutation DeletePost($id: ID!) {
     id
   }
 }
+
+mutation ToggleLikePost($postId: ID!) {
+  toggleLikePost(postId: $postId) {
+    liked
+    likeCount
+  }
+}

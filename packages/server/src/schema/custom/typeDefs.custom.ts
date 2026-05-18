@@ -4,6 +4,11 @@
 // from the generated SDL so they can be re-declared here with different signatures.
 
 export const customTypeDefs = /* GraphQL */ `
+  type LikeToggleResult {
+    liked: Boolean!
+    likeCount: Int!
+  }
+
   extend type Query {
     posts(published: Boolean): [Post!]!
     postsByTag(name: String!): [Post!]!
@@ -17,5 +22,11 @@ export const customTypeDefs = /* GraphQL */ `
     addComment(postId: ID!, body: String!): Comment!
     addTagToPost(postId: ID!, tagName: String!): Post!
     removeTagFromPost(postId: ID!, tagName: String!): Post!
+    toggleLikePost(postId: ID!): LikeToggleResult!
+  }
+
+  extend type Post {
+    likeCount: Int!
+    viewerHasLiked: Boolean!
   }
 `

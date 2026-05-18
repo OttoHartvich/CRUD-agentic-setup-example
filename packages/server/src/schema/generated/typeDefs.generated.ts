@@ -18,6 +18,7 @@ enum Role {
     role: Role!
     posts: [Post!]!
     comments: [Comment!]!
+    likes: [Like!]!
     createdAt: String!
   }
 
@@ -30,6 +31,7 @@ enum Role {
     authorId: String!
     comments: [Comment!]!
     tags: [Tag!]!
+    likes: [Like!]!
     createdAt: String!
     updatedAt: String!
   }
@@ -48,6 +50,15 @@ enum Role {
     id: ID!
     name: String!
     posts: [Post!]!
+    createdAt: String!
+  }
+
+  type Like {
+    id: ID!
+    user: User!
+    userId: String!
+    post: Post!
+    postId: String!
     createdAt: String!
   }
 
@@ -74,6 +85,11 @@ enum Role {
     name: String!
   }
 
+  input LikeCreateInput {
+    userId: String!
+    postId: String!
+  }
+
   input UserUpdateInput {
     email: String
     name: String
@@ -97,6 +113,11 @@ enum Role {
     name: String
   }
 
+  input LikeUpdateInput {
+    userId: String
+    postId: String
+  }
+
   type Query {
     user(id: ID!): User
     users: [User!]!
@@ -109,6 +130,9 @@ enum Role {
     tag(id: ID!): Tag
     tags: [Tag!]!
     tagsCount: Int!
+    like(id: ID!): Like
+    likes: [Like!]!
+    likesCount: Int!
   }
 
   type Mutation {
@@ -122,6 +146,9 @@ enum Role {
     createTag(input: TagCreateInput!): Tag!
     updateTag(id: ID!, input: TagUpdateInput!): Tag!
     deleteTag(id: ID!): Tag!
+    createLike(input: LikeCreateInput!): Like!
+    updateLike(id: ID!, input: LikeUpdateInput!): Like!
+    deleteLike(id: ID!): Like!
   }
 
 `

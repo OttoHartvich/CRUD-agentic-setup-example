@@ -11,6 +11,8 @@ import {
   addTagToPost,
   removeTagFromPost,
   findPostsByTag,
+  toggleLike,
+  getPostLikeStatus,
 } from '@mock/db'
 import type { GraphQLContext } from '../../context.js'
 
@@ -49,5 +51,32 @@ export const customResolvers = {
       args: { postId: string; tagName: string },
       ctx: GraphQLContext
     ) => removeTagFromPost(args.postId, args.tagName, ctx.currentUserId),
+
+    toggleLikePost: (_: unknown, args: { postId: string }, ctx: GraphQLContext) =>
+      toggleLike(ctx.currentUserId, args.postId),
+  },
+  Post: {
+    likeCount: async (parent: { id: string }, _args: unknown, ctx: GraphQLContext) => {
+      try {
+        const { likeCount } = await getPostLikeStatus(ctx.currentUserId, parent.id)
+        return likeCount
+      } catch (err) {
+        console.error(`Post.likeCount resolver failed for post ${parent.id}:`, err)
+        return 0
+      }
+    },
+    viewerHasLiked: async (
+      parent: { id: string },
+      _args: unknown,
+      ctx: GraphQLContext
+    ) => {
+      try {
+        const { viewerHasLiked } = await getPostLikeStatus(ctx.currentUserId, parent.id)
+        return viewerHasLiked
+      } catch (err) {
+        console.error(`Post.viewerHasLiked resolver failed for post ${parent.id}:`, err)
+        return false
+      }
+    },
   },
 }

@@ -9,6 +9,7 @@ import { usePostsByTag } from '../hooks/usePostsByTag'
 import { useListTags } from '../hooks/generated/tag.hooks'
 import { formatError } from '../lib/format-error'
 import { authorHandle, formatDate, pad2 } from '../lib/format'
+import { LikeButton } from './LikeButton'
 
 export function PostList() {
   const [filterPublished, setFilterPublished] = useAtom(filterPublishedAtom)
@@ -104,10 +105,17 @@ export function PostList() {
               {post.content.length > 200 ? '...' : ''}
             </p>
             <div className="footer-row">
-              <span>
-                {tagNames.length > 0
-                  ? `// tagged: ${tagNames.join(' · ')}`
-                  : '// untagged'}
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                <LikeButton
+                  postId={post.id}
+                  likeCount={post.likeCount}
+                  viewerHasLiked={post.viewerHasLiked}
+                />
+                <span>
+                  {tagNames.length > 0
+                    ? `// tagged: ${tagNames.join(' · ')}`
+                    : '// untagged'}
+                </span>
               </span>
               <span>↗ open</span>
             </div>

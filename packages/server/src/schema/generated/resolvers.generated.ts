@@ -24,6 +24,14 @@ function transformTagInput(input: Record<string, unknown>): Record<string, unkno
   return input
 }
 
+function transformLikeInput(input: Record<string, unknown>): Record<string, unknown> {
+  const rest: Record<string, unknown> = { ...input }
+  const out: Record<string, unknown> = { ...input }
+  if (typeof rest.userId === 'string') { (out as Record<string, unknown>).user = { connect: { id: rest.userId } }; delete (out as Record<string, unknown>).userId }
+  if (typeof rest.postId === 'string') { (out as Record<string, unknown>).post = { connect: { id: rest.postId } }; delete (out as Record<string, unknown>).postId }
+  return out
+}
+
 export const generatedResolvers = {
   Query: {
     user: (_: unknown, args: { id: string }) =>
@@ -48,6 +56,12 @@ export const generatedResolvers = {
       prisma.tag.findMany({ orderBy: { createdAt: 'desc' } }),
     tagsCount: () =>
       prisma.tag.count(),
+    like: (_: unknown, args: { id: string }) =>
+      prisma.like.findUnique({ where: { id: args.id } }),
+    likes: () =>
+      prisma.like.findMany({ orderBy: { createdAt: 'desc' } }),
+    likesCount: () =>
+      prisma.like.count(),
   },
   Mutation: {
     createUser: (_: unknown, args: { input: Record<string, unknown> }) =>
@@ -70,12 +84,20 @@ export const generatedResolvers = {
       prisma.tag.update({ where: { id: args.id }, data: transformTagInput(args.input) as never }),
     deleteTag: (_: unknown, args: { id: string }) =>
       prisma.tag.delete({ where: { id: args.id } }),
+    createLike: (_: unknown, args: { input: Record<string, unknown> }) =>
+      prisma.like.create({ data: transformLikeInput(args.input) as never }),
+    updateLike: (_: unknown, args: { id: string; input: Record<string, unknown> }) =>
+      prisma.like.update({ where: { id: args.id }, data: transformLikeInput(args.input) as never }),
+    deleteLike: (_: unknown, args: { id: string }) =>
+      prisma.like.delete({ where: { id: args.id } }),
   },
   User: {
     posts: (parent: { id: string }) =>
       prisma.user.findUnique({ where: { id: parent.id } }).posts(),
     comments: (parent: { id: string }) =>
       prisma.user.findUnique({ where: { id: parent.id } }).comments(),
+    likes: (parent: { id: string }) =>
+      prisma.user.findUnique({ where: { id: parent.id } }).likes(),
   },
   Post: {
     author: (parent: { id: string }) =>
@@ -84,6 +106,8 @@ export const generatedResolvers = {
       prisma.post.findUnique({ where: { id: parent.id } }).comments(),
     tags: (parent: { id: string }) =>
       prisma.post.findUnique({ where: { id: parent.id } }).tags(),
+    likes: (parent: { id: string }) =>
+      prisma.post.findUnique({ where: { id: parent.id } }).likes(),
   },
   Comment: {
     post: (parent: { id: string }) =>
@@ -94,6 +118,12 @@ export const generatedResolvers = {
   Tag: {
     posts: (parent: { id: string }) =>
       prisma.tag.findUnique({ where: { id: parent.id } }).posts(),
+  },
+  Like: {
+    user: (parent: { id: string }) =>
+      prisma.like.findUnique({ where: { id: parent.id } }).user(),
+    post: (parent: { id: string }) =>
+      prisma.like.findUnique({ where: { id: parent.id } }).post(),
   },
 
 }

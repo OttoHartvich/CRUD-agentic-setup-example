@@ -5,6 +5,8 @@ query GetPostsByTag($name: String!) {
     content
     published
     createdAt
+    likeCount
+    viewerHasLiked
     author {
       id
       name

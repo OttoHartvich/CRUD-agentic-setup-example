@@ -1,0 +1,43 @@
+# Auto-generated — DO NOT EDIT
+# Default operations for Like. Add custom ops in src/graphql/custom/.
+
+fragment LikeFields on Like {
+  id
+  userId
+  postId
+  createdAt
+}
+
+query GetLike($id: ID!) {
+  like(id: $id) {
+    ...LikeFields
+  }
+}
+
+query ListLikes {
+  likes {
+    ...LikeFields
+  }
+}
+
+query CountLikes {
+  likesCount
+}
+
+mutation CreateLike($input: LikeCreateInput!) {
+  createLike(input: $input) {
+    ...LikeFields
+  }
+}
+
+mutation UpdateLike($id: ID!, $input: LikeUpdateInput!) {
+  updateLike(id: $id, input: $input) {
+    ...LikeFields
+  }
+}
+
+mutation DeleteLike($id: ID!) {
+  deleteLike(id: $id) {
+    id
+  }
+}

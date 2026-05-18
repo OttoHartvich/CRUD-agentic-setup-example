@@ -4,6 +4,8 @@ query GetPosts($published: Boolean) {
     title
     content
     published
+    likeCount
+    viewerHasLiked
     author {
       id
       name
@@ -31,6 +33,8 @@ query GetPostWithComments($id: ID!) {
     title
     content
     published
+    likeCount
+    viewerHasLiked
     author {
       id
       name
